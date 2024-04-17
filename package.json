@@ -1,0 +1,16 @@
+{
+  "name": "synology-surveilllance-station-switch-home-mode",
+  "version": "1.0.0",
+  "description": "Automatically switch home home by checking the presence of a mobile phone on the WIFI.",
+  "main": "main.js",
+  "bin": {
+    "switch-home-mode": "main.js"
+  },
+  "scripts": {
+    "start": "node main.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "node-arp": "^1.0.6"
+  }
+}
