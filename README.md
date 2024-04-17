@@ -1,4 +1,4 @@
-Automatically enters or leaved the Home Mode on the Synology Surveillance Station when a mobile phone gets on the WIFI.
+Automatically enters or leaves the Home Mode on the Synology Surveillance Station when a mobile phone gets on the WIFI.
 
 This is for advanced users...
 
@@ -8,7 +8,7 @@ This node.js script checks the presence of a mobile phone on the network. If one
 Create two Web Hooks in your Synology Surveillance Station: one to Enter Home Mode, one to leave home mode. When creating these hooks, ensure you select the `GET` method. Take a note of the URLs of those two web hooks for the configuration file below.
 
 # Step 2: Router DHCP
-Log on to your router's admin page and find your mobile phones. Add all your mobile phones to the "DHCP Reservation" list. This will ensure that your mobile phones will not change IP addresss.
+Log on to your router's admin page and find your mobile phones. Add all your mobile phones to the "DHCP Reservation" list. This will ensure that your mobile phones will not change IP address.
 
 Write down the IP address and MAC address of all your mobile phones for the configuration file below.
 
@@ -42,7 +42,7 @@ Create the following configuration file `config.json`.
     }
 
 # Step 5: Upload the code to the Disk Station
-Make sure that the appliction Node.js is installed on your Synology Disk Station.
+Make sure that the application Node.js is installed on your Synology Disk Station.
 
 On your Synology Disk Station, create a user e.g. `api_user` which only has access to the Synology Surveillance Station application. In that user's home folder, create a new folder with the name e.g. `switch-home-mode` and upload the following files into it.
 
@@ -68,11 +68,12 @@ At this point, it is a good time to test your script using the command `node mai
 # Step 6: Scheduled Task
 
 Finally on the Synology Disk Station's Control Panel, create a scheduled task to execute this script every 20 minutes.
- - Under _Gerneral_ make sure you select the user `api_user`.
- - Configure that scipt to run every 20 minutes.
+ - Under _General_ make sure you select the user `api_user`.
+ - Configure that script to run every 20 minutes.
  - The _User-defined script_ is:
 
-    echo This is running from $PWD
-    node ./switch-home-mode/main.js
 
-Note that to see the output of the scheduled tasks, you need to go to the settings and configure a folder in which the scheduled tasks' outputs will be saved. Make sure that `api_user` has read/write rights to that folders.
+        echo This is running from $PWD
+        node ./switch-home-mode/main.js
+
+Note that to see the output of the scheduled tasks, you need to go to the settings and configure a folder in which the scheduled tasks' outputs will be saved. Make sure that `api_user` has read/write privileges to that folders.
