@@ -46,16 +46,36 @@ Make sure that the application Node.js is installed on your Synology Disk Statio
 
 On your Synology Disk Station, create a user e.g. `api_user` which only has access to the Synology Surveillance Station application. In that user's home folder, create a new folder with the name e.g. `switch-home-mode` and upload the following files into it.
 
-    ./switch-home-mode/config.json
-    ./switch-home-mode/main.js
-    ./switch-home-mode/package.json
+        ./switch-home-mode/config.json
+        ./switch-home-mode/main.js
+        ./switch-home-mode/package.json
+
+# Step 6: Allow ping
 
 On your Control Panel, temporarily enable SSH (under "Terminal & SNMP").
 Then in a terminal you can type the following command `ssh admin@diskstation.local`.
  - In that command `diskstation.local` is obviously the IP address of your disk station.
  - And `admin` is the user name of an admin account on your disk station.
 
-Then you need to cd in the `switch-home-mode` folder and type `npm install` to install the dependencies inside the `node_modules` folder.
+By default the Synology Disk Station does not allow the ping prococol, which is needed by this script.
+To enable the ping protocol, you need to set this value in the file `/etc/sysctl.conf`.
+
+        net.ipv4.ping_group_range = 0   2147483647
+
+To edit the file, you will need to use the `vi` editor. Use the command `sudo vi /etc/sysctl.conf`.
+Once you have open the file, type `i` to start editing the file. Once you have added the line
+`net.ipv4.ping_group_range = 0   2147483647`, you can save and quit `vi` using the command `:wq`.
+
+Once this is done; restart your Disk Station.
+
+Once restarted, log back in using `ssh admin@diskstation.local`.
+You can use the command `sysctl -a` to verify that the value was set correctly.
+Verify that you can ping your device even as a normal user `ping -c 1 192.168.X.XXX`.
+
+# Step 7: Install Dependenciews
+
+Log back in using `ssh admin@diskstation.local` to install the application's dependencies.
+You need to cd in the `switch-home-mode` folder and type `npm install` to install the dependencies inside the `node_modules` folder.
 
     cd /var/services/homes/api_user/switch-home-mode
     npm install # Install dependencies in the node_modules folder
@@ -65,7 +85,7 @@ Then you need to cd in the `switch-home-mode` folder and type `npm install` to i
 
 At this point, it is a good time to test your script using the command `node main.js`. Try to connect/disconnect your phone from the WIFI and verify that it enters or leave the home mode.
 
-# Step 6: Scheduled Task
+# Step 8: Scheduled Task
 
 Finally on the Synology Disk Station's Control Panel, create a scheduled task to execute this script every 20 minutes.
  - Under _General_ make sure you select the user `api_user`.
@@ -74,6 +94,7 @@ Finally on the Synology Disk Station's Control Panel, create a scheduled task to
 
 
         echo This is running from $PWD
-        node ./switch-home-mode/main.js
+        node ./switch-home-mode/main.js # Execute the application
+
 
 Note that to see the output of the scheduled tasks, you need to go to the settings and configure a folder in which the scheduled tasks' outputs will be saved. Make sure that `api_user` has read/write privileges to that folders.
